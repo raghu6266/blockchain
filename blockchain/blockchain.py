@@ -130,11 +130,18 @@ class Blockchain:
 
         return True
 
-    def submit_transaction(self, sender_public_key, recipient_public_key):
+    def submit_transaction(self, sender_public_key, recipient_public_key, signature,booking_id, amount, flight_number, user_name, date, source, destination, booking_status):
         transaction = OrderedDict({
             'sender_public_key': sender_public_key,
             'recipient_public_key': recipient_public_key,
-            'amount': amount
+            'amount': amount,
+            'booking_id':booking_id,
+            'flight_number': flight_number,
+            'user_name': user_name,
+            'date': date,
+            'source': source,
+            'destination': destination,
+            'booking_status': booking_status
         })
 
         # Reward for mining a block
@@ -186,7 +193,6 @@ def get_chain():
     return jsonify(response), 200
 
 
-
 @app.route('/mine', methods=['GET'])
 def mine():
     # We run the proof of work algorithm
@@ -224,7 +230,15 @@ def new_transaction():
 
     transaction_results = blockchain.submit_transaction(values['sender_public_key'],
                                                         values['recipient_public_key'],
-                                                        values['signature'],)
+                                                        values['signature'],
+                                                        values['booking_id'],
+                                                        values['amount'],
+                                                        values['flight_number'],
+                                                        values['user_name'],
+                                                        values['date'],
+                                                        values['source'],
+                                                        values['destination'],
+                                                        values['booking_status'],)
     if transaction_results == False:
         response = {'message': 'Invalid transaction/signature'}
         return jsonify(response), 406
